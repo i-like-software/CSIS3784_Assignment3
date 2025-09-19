@@ -1,0 +1,78 @@
+/* Player POV grid styles */
+.player-pov-grid {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+/* POV card */
+.player-pov-card {
+  background: linear-gradient(180deg, rgba(0,0,0,0.6), rgba(8,8,16,0.85));
+  border: 2px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  min-height: 160px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+}
+
+/* header meta */
+.player-pov-card .pov-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.player-pov-card .pov-username {
+  font-weight: 700;
+  color: #e6f7ff;
+  font-size: 0.95rem;
+}
+.player-pov-card .pov-team {
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.75rem;
+}
+.player-pov-card .pov-team.pov-red {
+  background: rgba(255,0,0,0.12);
+  color: #ffb3b3;
+  border: 1px solid rgba(255,0,0,0.18);
+}
+.player-pov-card .pov-team.pov-blue {
+  background: rgba(0,120,255,0.12);
+  color: #cfeaff;
+  border: 1px solid rgba(0,120,255,0.18);
+}
+
+/* video */
+.player-pov-video {
+  width: 100%;
+  height: 160px;
+  background: #000;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 6px;
+}
+
+/* footer */
+.player-pov-card .pov-footer {
+  font-size: 0.85rem;
+  color: #d0d6e0;
+  display:flex;
+  justify-content:flex-start;
+  gap:8px;
+  align-items:center;
+}
+
+/* responsive tweaks */
+@media (max-width:600px) {
+  .player-pov-video {
+    height: 120px;
+  }
+}

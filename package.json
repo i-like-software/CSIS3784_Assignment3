@@ -1,0 +1,27 @@
+{
+  "name": "team-9-bbd-2025-mobile-laser-tag",
+  "version": "1.0.0",
+  "description": "Hello World",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0",
+    "fs": "^0.0.1-security",
+    "socket.io": "^4.8.1",
+    "uuid": "^11.1.0",
+    "ws": "^8.18.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MasterAlC/Team-9-BBD-2025-Mobile-Laser-Tag.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/MasterAlC/Team-9-BBD-2025-Mobile-Laser-Tag/issues"
+  },
+  "homepage": "https://github.com/MasterAlC/Team-9-BBD-2025-Mobile-Laser-Tag#readme"
+}

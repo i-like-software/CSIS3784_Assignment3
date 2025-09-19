@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>HEADSHOTS! Mobile Laser Tag</title>
+
+  <!-- Tailwind CSS CDN (okay for development, not production) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- External Stylesheet -->
+  <link rel="stylesheet" href="styles/styles.css" />
+  <link rel="stylesheet" href="styles/spectate-page.css" />
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;700&display=swap" rel="stylesheet" />
+
+  <!-- Main Client Application (only load the main module; it imports the others) -->
+  <script type="module" src="scripts/game.js" defer></script>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-4 bg-black text-white">
+
+  <!-- HOME SCREEN -->
+  <div id="homeScreen" class="hidden container bg-gray-900 bg-opacity-70 backdrop-blur-sm rounded-xl p-8 shadow-lg max-w-lg w-full text-center border border-purple-500">
+    <h1 class="retro-heading text-4xl sm:text-5xl font-bold mb-8 text-cyan-400">
+      HEADSHOTS!
+      Laser Tag
+    </h1>
+
+    <button id="createGameBtn" class="btn text-xl sm:text-2xl font-bold py-3 px-6 rounded-lg mb-6 w-full max-w-xs">
+      Create Game
+    </button>
+
+    <button id="joinGameBtn" class="btn text-xl sm:text-2xl font-bold py-3 px-6 rounded-lg w-full max-w-xs bg-indigo-700">
+      Join Game
+    </button>
+  </div>
+
+  <!-- CREATE GAME SCREEN -->
+  <div id="createGameScreen" class="hidden container bg-gray-900 bg-opacity-70 backdrop-blur-sm rounded-xl p-8 shadow-lg max-w-lg w-full text-center border border-purple-500">
+      <h2 class="retro-heading text-3xl mb-6 text-cyan-400">Game Created!</h2>
+      <p class="text-lg mb-6">Share this code with your friends:</p>
+      <p id="createdGameCode" class="text-2xl font-bold text-yellow-400 mb-8"></p>
+
+      <div class="my-6">
+        <h3 class="text-xl text-green-300 mb-2">Players Joined:</h3>
+        <ul id="hostPlayerList" class="text-lg space-y-2 text-white"></ul>
+      </div>
+
+      <button id="startGameBtn" class="btn text-xl font-bold py-3 px-6 rounded-lg w-full max-w-xs mb-4">
+        Start Game
+      </button>
+
+      <button id="backToHomeFromCreateBtn" class="hidden btn text-xl font-bold py-3 px-6 rounded-lg w-full max-w-xs bg-indigo-700">
+        Back to Home
+      </button>
+  </div>
+
+  <!-- JOIN GAME SCREEN -->
+  <div id="joinGameScreen" class="hidden container bg-gray-900 bg-opacity-70 backdrop-blur-sm rounded-xl p-8 shadow-lg max-w-lg w-full text-center border border-purple-500">
+      <h2 class="retro-heading text-3xl mb-6 text-cyan-400">Join a Game</h2>
+      <input type="text" id="joinGameCodeInput" placeholder="Enter Game Code" class="w-full mb-6 py-3 px-4 text-black text-lg rounded-lg border border-purple-500 focus:outline-none focus:ring-4 focus:ring-purple-600" />
+      <button id="joinAsPlayerBtn" class="btn text-xl font-bold py-3 px-6 rounded-lg mb-6 w-full max-w-xs">Play</button>
+      <button id="joinAsSpectatorBtn" class="btn text-xl font-bold py-3 px-6 rounded-lg w-full max-w-xs bg-indigo-700 mb-4">Spectate</button>
+
+      <button id="backToHomeFromJoinBtn" class="hidden btn text-xl font-bold py-3 px-6 rounded-lg w-full max-w-xs bg-indigo-700">
+        Back to Home
+      </button>
+  </div>
+
+  <!-- WAITING ROOM SCREEN -->
+  <div id="waitingRoomScreen" class="hidden container bg-gray-900 bg-opacity-70 backdrop-blur-sm rounded-xl p-8 shadow-lg max-w-lg w-full text-center border border-purple-500">
+    <h2 class="retro-heading text-3xl mb-6 text-cyan-400">Waiting Room</h2>
+    <p class="mb-4">Game Code:</p>
+    <p id="waitingRoomGameId" class="text-2xl font-bold text-yellow-400 mb-6"></p>
+    <ul id="playerList" class="text-lg space-y-2"></ul>
+    <p id="waitingMessage" class="mt-6 text-green-400"></p>
+  </div>
+
+  <!-- Message Box -->
+  <div id="messageBox" class="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800 text-white p-6 rounded-lg shadow-xl border-2 border-red-500 z-50 hidden" style="width: 80%; max-width: 400px;">
+    <p id="messageText" class="text-center text-lg mb-4"></p>
+    <button id="closeMessageBox" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full">Close</button>
+  </div>
+
+<!-- PLAYER VIEW -->
+<div id="playerViewScreen" class="hidden flex flex-col items-center w-screen p-2 bg-black text-white relative overflow-hidden" style="height: 100vh; height: 100dvh; position: relative;">
+    <!-- Full-screen camera background -->
+    <div class="fixed inset-0 z-0 rounded-lg overflow-hidden shadow-xl flex items-center justify-center border-2 border-cyan-400 mx-auto flex-grow" 
+         style="background-color: rgba(0, 0, 0, 0.8); box-shadow: 0 0 15px rgba(0, 255, 255, 0.7); position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0;"> 
+        <video id="video" autoplay playsinline muted class="absolute top-0 left-0 w-full h-full object-cover"></video>
+        <div id="crosshair" class="pointer-events-none w-16 h-16 sm:w-20 sm:h-20 absolute" style="border: 2px solid rgba(255,255,255,0.6); border-radius: 50%; box-shadow: 0 0 8px rgba(255, 255, 255, 0.5); z-index: 1; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <div class="w-4 h-4 bg-white rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+        </div>
+        <div id="result" class="retro-heading hidden text-white text-3xl sm:text-4xl absolute z-2" style="text-shadow: 0 0 10px white, 0 0 20px white; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2;"> 
+        </div>
+    </div>
+
+    <!-- Top Scores -->
+    <div class="w-full max-w-sm sm:max-w-md flex justify-between items-center px-4 py-1 sm:px-6 sm:py-2 rounded-xl shadow-lg border border-purple-700 mx-auto mb-2 flex-shrink-0 relative z-10" 
+         style="background-color: rgba(36, 36, 62, 0.9); box-shadow: 0 0 10px rgba(128, 0, 128, 0.7); position: relative; z-index: 10; margin-top: 1rem;">
+        <div id="playerRedScore" class="text-lg sm:text-xl md:text-2xl text-red-500 font-bold retro-heading" style="text-shadow: 0 0 6px red, 0 0 10px red;">RED: 0</div>
+        <div class="text-base sm:text-lg md:text-xl text-yellow-400 font-bold px-1 sm:px-2 py-1 rounded retro-heading" style="text-shadow: 0 0 6px yellow, 0 0 10px yellow;" id="playerStatusLabel">Time Left: 00:30</div>
+        <div id="playerBlueScore" class="text-lg sm:text-xl md:text-2xl text-blue-500 font-bold retro-heading" style="text-shadow: 0 0 6px blue, 0 0 10px blue;">BLUE: 0</div>
+    </div>
+
+    <!-- Main content area -->
+    <div id="mainContent" class="w-full flex-grow flex flex-col landscape:md:flex-row landscape:md:items-stretch items-center justify-center gap-4 landscape:md:gap-8 overflow-hidden relative z-10">
+        <!-- Weapons-->
+        <div class="flex flex-row items-center justify-center gap-4 p-2 flex-shrink-0 landscape:md:w-1/2 relative z-10">
+            <button id="shootButton" class="w-24 h-24 sm:w-32 sm:h-32 rounded-full relative overflow-hidden transform hover:scale-105 transition-all duration-300 btn relative z-10" 
+                    style="background-color: #ff0000; border: 5px solid #ffffff; box-shadow: 0 0 15px #fe3d3d, 0 0 25px #ff5959; text-shadow: 0 0 6px #fff; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;">
+                SHOOT
+            </button>
+            <button id="bazookaButton" class="w-24 h-24 sm:w-32 sm:h-32 rounded-full relative overflow-hidden transform hover:scale-105 transition-all duration-300 btn relative z-10" 
+                    style="background-color: #ff0000; border: 5px solid #ffffff; box-shadow: 0 0 15px #fe3d3d, 0 0 25px #ff5959; text-shadow: 0 0 6px #fff; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;"> 
+                BAZOOKA
+            </button>
+            <button id="grenadeButton" class="w-24 h-24 sm:w-32 sm:h-32 rounded-full relative overflow-hidden transform hover:scale-105 transition-all duration-300 btn relative z-10" 
+                    style="background-color: #ff0000; border: 5px solid #ffffff; box-shadow: 0 0 15px #fe3d3d, 0 0 25px #ff5959; text-shadow: 0 0 6px #fff; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;">
+                Grenade
+            </button>
+        </div>
+        
+        <div class="flex flex-col items-center text-center relative z-10">
+            <p id="callActionMessage" class="retro-heading text-lg sm:text-xl text-white mb-1 relative z-10" style="text-shadow: 0 0 8px white;">You shot BLUE</p>
+            <p id="teamNameLabel" class="retro-heading text-xl sm:text-2xl font-bold relative z-10" style="text-shadow: 0 0 8px rgb(255, 255, 255); color: rgb(255, 255, 255);">Your Team: RED</p>
+        </div>
+    </div>
+
+    <button id="leaveGamePlayerBtn" class="fixed bottom-2 right-2 btn text-sm sm:text-base font-bold py-2 px-4 rounded-lg hidden relative z-20" 
+        style="background-color: #a00; border-color: #f00; box-shadow: 0 0 8px #f00, 0 0 15px #f00; z-index: 20;">
+        Leave
+    </button>
+</div>
+
+  <!-- SPECTATOR SCREEN -->
+  <div id="spectatorViewScreen" class="hidden flex flex-col items-center justify-start h-screen w-full p-4 pt-[70px] sm:pt-[80px] overflow-y-auto">
+    <div class="lobby-number" id="lobbyNumber">Lobby: Connecting...</div>
+
+    <div class="spectate-container rounded-xl p-4 sm:p-8 shadow-lg max-w-5xl w-full text-center relative z-10">
+        <h1 class="retro-heading text-4xl sm:text-5xl font-bold mb-6 text-cyan-400">
+            Spectating Game
+        </h1>
+
+        <div class="flex justify-center items-center mb-6">
+            <div class="timer retro-heading text-3xl text-red-500" id="gameTimer">00:00</div>
+        </div>
+
+        <div class="flex flex-col md:flex-row justify-around w-full gap-4 mb-6">
+            <div class="flex-1 red-team-panel p-4 rounded-lg shadow-md">
+                <h2 class="retro-heading text-2xl text-red-400 mb-4">RED TEAM</h2>
+                <div class="text-3xl text-red-400 font-bold mb-4" id="redTeamScore">Score: 0</div>
+                <div class="scrollable-box">
+                    <table class="game-info-table">
+                        <thead>
+                            <tr>
+                                <th>Position</th>
+                                <th>Name</th>
+                                <th>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="redTeamPlayersBody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="flex-1 blue-team-panel p-4 rounded-lg shadow-md">
+                <h2 class="retro-heading text-2xl text-blue-400 mb-4">BLUE TEAM</h2>
+                <div class="text-3xl text-blue-400 font-bold mb-4" id="blueTeamScore">Score: 0</div>
+                <div class="scrollable-box">
+                    <table class="game-info-table">
+                        <thead>
+                            <tr>
+                                <th>Position</th>
+                                <th>Name</th>
+                                <th>Score</th>
+                            </tr>
+                        </thead>
+                        <tbody id="blueTeamPlayersBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="playerPOVGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+
+        <button id="leaveButton" class="btn leave-btn text-xl sm:text-2xl font-bold py-2 px-6 rounded-lg transition transform hover:scale-105 focus:outline-none focus:ring-4 focus:ring-orange-600 mt-6">
+            Leave Game
+        </button>
+    </div>
+  </div>
+
+  <!-- USERNAME SCREEN -->
+  <div id="usernameScreen" class="container bg-gray-900 bg-opacity-70 backdrop-blur-sm rounded-xl p-8 shadow-lg max-w-lg w-full text-center border border-purple-500">
+    <h2 class="retro-heading text-3xl mb-6 text-cyan-400">Enter Username</h2>
+    <input type="text" id="usernameInput" placeholder="Your username..." class="w-full mb-6 py-3 px-4 text-black text-lg rounded-lg border border-purple-500 focus:outline-none focus:ring-4 focus:ring-purple-600" />
+    <button id="continueBtn" class="btn text-xl font-bold py-3 px-6 rounded-lg w-full max-w-xs">
+      Continue
+    </button>
+  </div>
+
+</body>
+</html>
