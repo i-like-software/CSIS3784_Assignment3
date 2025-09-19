@@ -105,7 +105,7 @@
     </div>
 
     <!-- Main content area -->
-    <div id="mainContent" class="w-full flex-grow flex flex-col landscape:md:flex-row landscape:md:items-stretch items-center justify-center gap-4 landscape:md:gap-8 overflow-hidden relative z-10">
+    <div class="flex flex-col items-center justify-center gap-2 p-2 flex-shrink-0 landscape:md:w-1/2 relative z-10" style="position: relative; z-index: 10; margin-top: auto; margin-bottom: 1rem; width: 100%; max-width: 600px;">
         <!-- Weapons-->
         <div class="flex flex-row items-center justify-center gap-4 p-2 flex-shrink-0 landscape:md:w-1/2 relative z-10">
             <button id="shootButton" class="w-24 h-24 sm:w-32 sm:h-32 rounded-full relative overflow-hidden transform hover:scale-105 transition-all duration-300 btn relative z-10" 
@@ -122,7 +122,7 @@
             </button>
         </div>
         
-        <div class="flex flex-col items-center text-center relative z-10">
+        <div class="flex flex-col items-center text-center z-10">
             <p id="callActionMessage" class="retro-heading text-lg sm:text-xl text-white mb-1 relative z-10" style="text-shadow: 0 0 8px white;">You shot BLUE</p>
             <p id="teamNameLabel" class="retro-heading text-xl sm:text-2xl font-bold relative z-10" style="text-shadow: 0 0 8px rgb(255, 255, 255); color: rgb(255, 255, 255);">Your Team: RED</p>
         </div>
