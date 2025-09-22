@@ -89,8 +89,9 @@
     <div class="fixed inset-0 z-0 rounded-lg overflow-hidden shadow-xl flex items-center justify-center border-2 border-cyan-400 mx-auto flex-grow w-full h-full object-cover" 
          style="background-color: rgba(0, 0, 0, 0.8); box-shadow: 0 0 15px rgba(0, 255, 255, 0.7); position: fixed; top: 0; left: 0; z-index: 0;"> 
         <video id="video" autoplay playsinline muted class="absolute top-0 left-0 w-full h-full object-cover"></video>
-        <div id="crosshair" class="pointer-events-none w-16 h-16 sm:w-20 sm:h-20 absolute" style="border: 2px solid rgba(255,255,255,0.6); border-radius: 50%; box-shadow: 0 0 8px rgba(255, 255, 255, 0.5); z-index: 1; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-            <div class="w-4 h-4 bg-white rounded-full absolute" style="top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
+        <div id="crosshair" class="pointer-events-none w-16 h-16 sm:w-20 sm:h-20 absolute flex items-center justify-center"
+        style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); border: 2px solid rgba(255,255,255,0.6); border-radius: 50%; box-shadow: 0 0 8px rgba(255, 255, 255, 0.5); z-index: 100;">
+          <div class="w-4 h-4 bg-white rounded-full"></div>
         </div>
         <div id="result" class="retro-heading hidden text-white text-3xl sm:text-4xl absolute z-2" style="text-shadow: 0 0 10px white, 0 0 20px white; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2;"> 
         </div>
@@ -141,6 +142,8 @@
             </button>
         </div>
         
+        <div id="weapon-effects" class="pointer-events-none fixed inset-0 z-50"></div>
+
         <div class="flex flex-col items-center text-center z-10">
             <p id="callActionMessage" class="retro-heading text-lg sm:text-xl text-white mb-1 relative z-10" style="text-shadow: 0 0 8px white;">You shot BLUE</p>
             <p id="teamNameLabel" class="retro-heading text-xl sm:text-2xl font-bold relative z-10" style="text-shadow: 0 0 8px rgb(255, 255, 255); color: rgb(255, 255, 255);">Your Team: RED</p>

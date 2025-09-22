@@ -141,3 +141,19 @@ video {
 #mainContent {
     margin-bottom: 0%;
 }
+
+/* Explosion */
+.explosion {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, orange 0%, red 60%, transparent 100%);
+  animation: explode 0.7s ease-out forwards;
+}
+
+@keyframes explode {
+  0% { transform: scale(0.5); opacity: 1; }
+  70% { transform: scale(2); opacity: 0.7; }
+  100% { transform: scale(3); opacity: 0; }
+}

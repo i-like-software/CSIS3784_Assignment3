@@ -501,6 +501,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             updateActionLabel('Blank shot');
         }
+
+        showExplosion();
         vibrateDevice(100);
         playsound('assets/shoot_sound.mp3');
 
@@ -520,6 +522,7 @@ document.addEventListener('DOMContentLoaded', () => {
         grenadeCooldown = true;
         grenadeButton.disabled = true;
  
+        showExplosion(); // center of screen
         vibrateDevice(300);
         playsound('assets/grenade_sound.mp3');
         sendHitPayload('grenade', colorToSend);
@@ -624,6 +627,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let colorToSend = (detectedColour || "blank").toString().toLowerCase();
         if (colorToSend !== "red" && colorToSend !== "blue") colorToSend = "blank";
         updateActionLabel(colorToSend === "blank" ? 'BAZOOKA missed!' : `BAZOOKA BLAST! Hit ${colorToSend.toUpperCase()}!`);
+        showExplosion()
         playsound('assets/bazooka_sound.mp3');
         vibrateDevice(200);
         sendHitPayload('bazooka', colorToSend);
@@ -653,6 +657,24 @@ document.addEventListener('DOMContentLoaded', () => {
             navigator.vibrate(duration);
         }
     }
+
+    // Simple explosion effect at x,y (defaults to center of screen)
+    function showExplosion(x = window.innerWidth / 2, y = window.innerHeight / 2) {
+        const container = document.getElementById("weapon-effects");
+        const boom = document.createElement("div");
+        boom.className = "explosion";
+
+        // center explosion at x,y
+        boom.style.left = `${x - 40}px`;
+        boom.style.top = `${y - 40}px`;
+        boom.style.position = "absolute";
+
+        container.appendChild(boom);
+
+        // remove after animation
+        setTimeout(() => boom.remove(), 700);
+    }
+
     // Continue button listener for the username screen
     if (continueBtn) {
         continueBtn.addEventListener('click', () => {
