@@ -86,11 +86,11 @@
 <!-- PLAYER VIEW -->
 <div id="playerViewScreen" class="hidden flex flex-col items-center w-screen p-2 bg-black text-white relative overflow-hidden" style="height: 100vh; height: 100dvh; position: relative;">
     <!-- Full-screen camera background -->
-    <div class="fixed inset-0 z-0 rounded-lg overflow-hidden shadow-xl flex items-center justify-center border-2 border-cyan-400 mx-auto flex-grow" 
-         style="background-color: rgba(0, 0, 0, 0.8); box-shadow: 0 0 15px rgba(0, 255, 255, 0.7); position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0;"> 
+    <div class="fixed inset-0 z-0 rounded-lg overflow-hidden shadow-xl flex items-center justify-center border-2 border-cyan-400 mx-auto flex-grow w-full h-full object-cover" 
+         style="background-color: rgba(0, 0, 0, 0.8); box-shadow: 0 0 15px rgba(0, 255, 255, 0.7); position: fixed; top: 0; left: 0; z-index: 0;"> 
         <video id="video" autoplay playsinline muted class="absolute top-0 left-0 w-full h-full object-cover"></video>
         <div id="crosshair" class="pointer-events-none w-16 h-16 sm:w-20 sm:h-20 absolute" style="border: 2px solid rgba(255,255,255,0.6); border-radius: 50%; box-shadow: 0 0 8px rgba(255, 255, 255, 0.5); z-index: 1; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-            <div class="w-4 h-4 bg-white rounded-full absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+            <div class="w-4 h-4 bg-white rounded-full absolute" style="top: 50%; left: 50%; transform: translate(-50%, -50%);"></div>
         </div>
         <div id="result" class="retro-heading hidden text-white text-3xl sm:text-4xl absolute z-2" style="text-shadow: 0 0 10px white, 0 0 20px white; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 2;"> 
         </div>
@@ -108,17 +108,36 @@
     <div class="flex flex-col items-center justify-center gap-2 p-2 flex-shrink-0 landscape:md:w-1/2 relative z-10" style="position: relative; z-index: 10; margin-top: auto; margin-bottom: 1rem; width: 100%; max-width: 600px;">
         <!-- Weapons-->
         <div class="flex flex-row items-center justify-center gap-4 p-2 flex-shrink-0 landscape:md:w-1/2 relative z-10">
+             <button id="bazookaButton" class="w-24 h-24 sm:w-32 sm:h-32 rounded-full relative overflow-hidden transform hover:scale-105 transition-all duration-300 btn relative z-10" 
+                    style="background-color: #ff0000; border: 5px solid #ffffff; box-shadow: 0 0 15px #fe3d3d, 0 0 25px #ff5959; text-shadow: 0 0 6px #fff; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;"> 
+                <img src="assets/bazooka.svg" alt="Bazooka" class="w-24 h-24 sm:w-32 sm:h-32"/>
+                <svg class="absolute inset-0 w-full h-full rotate-[-90deg] z-20">
+                    <circle id="bazooka-charge-circle"
+                        cx="50%" cy="50%" r="45%"
+                        stroke="rgba(255, 165, 0, 0.5)"
+                        stroke-width="10"
+                        fill="none"
+                        stroke-dasharray="0px, 1000px"
+                        stroke-dashoffset="283" />
+                </svg>
+            </button>
             <button id="shootButton" class="w-24 h-24 sm:w-32 sm:h-32 rounded-full relative overflow-hidden transform hover:scale-105 transition-all duration-300 btn relative z-10" 
                     style="background-color: #ff0000; border: 5px solid #ffffff; box-shadow: 0 0 15px #fe3d3d, 0 0 25px #ff5959; text-shadow: 0 0 6px #fff; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;">
-                SHOOT
-            </button>
-            <button id="bazookaButton" class="w-24 h-24 sm:w-32 sm:h-32 rounded-full relative overflow-hidden transform hover:scale-105 transition-all duration-300 btn relative z-10" 
-                    style="background-color: #ff0000; border: 5px solid #ffffff; box-shadow: 0 0 15px #fe3d3d, 0 0 25px #ff5959; text-shadow: 0 0 6px #fff; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;"> 
-                BAZOOKA
+                <img src="assets/shoot.svg" alt="Shoot" class="w-24 h-24 sm:w-32 sm:h-32"/>
             </button>
             <button id="grenadeButton" class="w-24 h-24 sm:w-32 sm:h-32 rounded-full relative overflow-hidden transform hover:scale-105 transition-all duration-300 btn relative z-10" 
                     style="background-color: #ff0000; border: 5px solid #ffffff; box-shadow: 0 0 15px #fe3d3d, 0 0 25px #ff5959; text-shadow: 0 0 6px #fff; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0;">
-                Grenade
+                <img src="assets/grenade.svg" alt="Grenade" class="w-24 h-24 sm:w-32 sm:h-32"/>
+                    <!-- cooldown overlay -->
+                <svg class="absolute inset-0 w-full h-full rotate-[-90deg] z-20">
+                    <circle id="grenade-cooldown-circle"
+                        cx="50%" cy="50%" r="45%"
+                        stroke="rgba(255, 0, 0, 0.5)"
+                        stroke-width="10"
+                        fill="none"
+                        stroke-dasharray="0px, 1000px"
+                        stroke-dashoffset="283" />
+                </svg>
             </button>
         </div>
         

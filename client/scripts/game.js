@@ -23,6 +23,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const bazookaButton = document.getElementById('bazookaButton');
     const grenadeButton = document.getElementById('grenadeButton');
 
+    // Play click sound for all buttons except weapon buttons
+    document.addEventListener('click', function(e) {
+        const target = e.target;
+        if (target.tagName === 'BUTTON') {
+            if (target !== shootButton && target !== bazookaButton && target !== grenadeButton) {
+                playsound('assets/click_sound.mp3');
+            }
+        }
+    });
+
     // ===== WebSocket helper: build URL with smart defaults & override via ?server= host:port =====
     function buildWebSocketURL() {
         // If user provided a server override via ?server=host:port
@@ -462,8 +472,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 // ensure multiple listeners are not stacked
                 shootButton.removeEventListener('click', shootHandler);
                 shootButton.addEventListener('click', shootHandler);
-                bazookaButton.removeEventListener('touchstart', bazookaHandler);
-                bazookaButton.addEventListener('touchstart', bazookaHandler);
+                bazookaButton.removeEventListener('mousedown', bazookaHandler);
+                bazookaButton.addEventListener('mousedown', bazookaHandler);
                 grenadeButton.removeEventListener('click', grenadeHandler);
                 grenadeButton.addEventListener('click', grenadeHandler);
             }
@@ -491,6 +501,8 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             updateActionLabel('Blank shot');
         }
+        vibrateDevice(100);
+        playsound('assets/shoot_sound.mp3');
 
         sendHitPayload('shoot', colorToSend);
     }
@@ -504,14 +516,53 @@ document.addEventListener('DOMContentLoaded', () => {
         let colorToSend = (detectedColour || "blank").toString().toLowerCase();
         if (colorToSend !== "red" && colorToSend !== "blue") colorToSend = "blank";
         updateActionLabel(colorToSend === "blank" ? 'Grenade missed!' : `GRENADE HIT! Targeted ${colorToSend.toUpperCase()} team!`);
-        sendHitPayload('grenade', colorToSend);
+
         grenadeCooldown = true;
         grenadeButton.disabled = true;
-        setTimeout(() => {
+ 
+        vibrateDevice(300);
+        playsound('assets/grenade_sound.mp3');
+        sendHitPayload('grenade', colorToSend);
+        const cooldownCircle = document.getElementById("grenade-cooldown-circle");
+        const duration = 10000; // 10s
+        const radius = 50;
+        const circumference = 2 * Math.PI * radius;
+
+        if (cooldownCircle) {
+            cooldownCircle.strokeDasharray = `${circumference} ${circumference}`;
+            cooldownCircle.style.strokeDasharray = circumference;
+            cooldownCircle.style.strokeDashoffset = circumference;
+
+            let start = null;
+
+            function animate(time) {
+            if (!start) start = time;
+            let elapsed = time - start;
+
+            let progress = Math.min(elapsed / duration, 1);
+            cooldownCircle.style.strokeDashoffset = circumference * (1 - progress);
+
+            if (progress < 1) {
+                requestAnimationFrame(animate);
+            } else {
+                // Reset cooldown
+                grenadeCooldown = false;
+                grenadeButton.disabled = false;
+                updateActionLabel('Grenade ready!');
+                cooldownCircle.style.strokeDashoffset = 0;
+                cooldownCircle.style.strokeDasharray = '0px, 1000px'; // effectively hide the circle
+            }
+            }
+
+            requestAnimationFrame(animate);
+        } else {
+            // Fallback if SVG not present
+            setTimeout(() => {
             grenadeCooldown = false;
             grenadeButton.disabled = false;
             updateActionLabel('Grenade ready!');
-        }, 10000); // 10 second cooldown
+            }, duration);
+        }
     }
 
     function bazookaHandler() {
@@ -520,7 +571,44 @@ document.addEventListener('DOMContentLoaded', () => {
     bazookaChargeStart = Date.now();
     updateActionLabel('Charging BAZOOKA...');
     bazookaButton.style.backgroundColor = '#ffa500'; // Orange for charging
-    document.addEventListener('touchend', bazookaReleaseHandler, { once: true });
+    const bazookaCircle = document.getElementById("bazooka-charge-circle");
+    const duration = 3000; // 3 seconds
+    const radius = 50;
+    const circumference = 2 * Math.PI * radius;
+
+    if (bazookaCircle) {
+        bazookaCircle.style.strokeDasharray = circumference;
+        bazookaCircle.style.strokeDashoffset = circumference;
+        bazookaCircle.classList.remove('hidden');
+
+        let start = null;
+        let stopped = false;
+
+        function animate(time) {
+            if (!start) start = time;
+            let elapsed = time - start;
+            let progress = Math.min(elapsed / duration, 1);
+            bazookaCircle.style.strokeDashoffset = circumference * (1 - progress);
+
+            if (progress < 1 && !stopped) {
+                requestAnimationFrame(animate);
+            }
+        }
+
+        requestAnimationFrame(animate);
+
+        function mouseUpHandler() {
+            stopped = true;
+            bazookaCircle.classList.add('hidden');
+            bazookaCircle.style.strokeDashoffset = 0;
+            document.removeEventListener('mouseup', mouseUpHandler);
+            bazookaReleaseHandler();
+        }
+
+        document.addEventListener('mouseup', mouseUpHandler, { once: true });
+    } else {
+        document.addEventListener('mouseup', bazookaReleaseHandler, { once: true });
+    }
     }
 
     function bazookaReleaseHandler() {
@@ -536,6 +624,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let colorToSend = (detectedColour || "blank").toString().toLowerCase();
         if (colorToSend !== "red" && colorToSend !== "blue") colorToSend = "blank";
         updateActionLabel(colorToSend === "blank" ? 'BAZOOKA missed!' : `BAZOOKA BLAST! Hit ${colorToSend.toUpperCase()}!`);
+        playsound('assets/bazooka_sound.mp3');
+        vibrateDevice(200);
         sendHitPayload('bazooka', colorToSend);
     }
 
@@ -551,7 +641,18 @@ document.addEventListener('DOMContentLoaded', () => {
         socket.send(JSON.stringify(payload));
         console.log("Sent player_hit event:", payload);
     }
+    // Simple sound player
+    function playsound(url) {
+        const sound = new Audio(url);
+        sound.play();
+    }
 
+    //Vibrate device
+    function vibrateDevice(duration) {
+        if (navigator.vibrate) {
+            navigator.vibrate(duration);
+        }
+    }
     // Continue button listener for the username screen
     if (continueBtn) {
         continueBtn.addEventListener('click', () => {
