@@ -104,59 +104,50 @@ class Game {
   }
 
   playerHitEventHandler(shooterId, color, weapon) {
-    if (!this.gameInProgress) return;
-    const shooter = this.shooters.get(shooterId);
-    if (!shooter) return;
+  if (!this.gameInProgress) return;
+  const shooter = this.shooters.get(shooterId);
+  if (!shooter) return;
 
-    if (color === "blank") {
-        // Event: Missed shot (0 points for the shooter)
-        shooter.updateScore(0);
-
-    } else if (shooter.team === color) {
-        // Event: Hit own team / Friendly Fire
-        // -5 points for the shooter.
-        shooter.updateScore(-5);
-        // -1 point for EACH player on the shooter's team (including the shooter again).
-        for (const player of this.shooters.values()) {
-            if (player.team === shooter.team) {
-                player.updateScore(-1);
-            }
-        }
-
-    } else { 
-        // Event: Hit opposing team
-        if (weapon === "shoot") {
-            shooter.updateScore(1);
-            this.DeductOpponentPoints(1, shooter.team === "blue" ? "red" : "blue");
-        } else if (weapon === "grenade") {
-            shooter.updateScore(10);
-            this.DeductOpponentPoints(3, shooter.team === "blue" ? "red" : "blue");
-        } else if (weapon === "bazooka") {
-            shooter.updateScore(3);
-            this.DeductOpponentPoints(2, shooter.team === "blue" ? "red" : "blue");
-        }
-        shooter.updateScore(5);
-        // +2 points for EACH player on the shooter's team.
-        for (const player of this.shooters.values()) {
-            if (player.team === shooter.team) {
-                player.updateScore(2);
-            }
-        }
+  if (color === "blank") {
+    // Missed shot: no points
+    return;
+  } else if (shooter.team === color) {
+    // Friendly fire: shooter -5, all teammates -1
+    shooter.updateScore(-5);
+    for (const player of this.shooters.values()) {
+      if (player.team === shooter.team) {
+        player.updateScore(-1);
+      }
     }
-    
-    this.recalculateTeamTotals();
-    // Broadcast updates (provide shooterId so clients can know who caused the change immediately)
-    this.broadcastScoreUpdate(shooterId);
+  } else {
+    // Hit opposing team
+    let shooterPoints = 0;
+    let opponentDamage = 0;
+    if (weapon === "shoot") {
+      shooterPoints = 1;
+      opponentDamage = -1;
+    } else if (weapon === "grenade") {
+      shooterPoints = 10;
+      opponentDamage = -3;
+    } else if (weapon === "bazooka") {
+      shooterPoints = 3;
+      opponentDamage = -2;
+    }
+    shooter.updateScore(shooterPoints);
+    this.DeductOpponentPoints(opponentDamage, shooter.team === "blue" ? "red" : "blue");
+  }
+  this.recalculateTeamTotals();
+  this.broadcastScoreUpdate(shooterId);
   }
 
   //Helper to apply damage to opposing team players
   DeductOpponentPoints(damage, color){
-          for (const player of this.shooters.values()) {
-              if (player.team === color) { 
-                  player.updateScore(damage);
-              }
-          }
-        }
+    for (const player of this.shooters.values()) {
+      if (player.team === color) { 
+        player.updateScore(damage);
+      }
+    }
+  }
 
   recalculateTeamTotals() {
     this.redTeamScore = 0;
