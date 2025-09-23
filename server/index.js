@@ -21,6 +21,10 @@ const getLocalExternalIP = () => {
 };
 
 const PORT = process.env.PORT || 3000;
+
+
+// --- Old server code (commented out for reference) ---
+/*
 let server;
 if (PORT == 3000) {
   const options = {
@@ -36,6 +40,18 @@ if (PORT == 3000) {
 const LOCAL_IP = getLocalExternalIP();
 server.listen(PORT, () => {
   console.log(`Server running at: https://${LOCAL_IP}:${PORT}`);
+});
+*/
+
+// --- New production-ready server code ---
+const server = http.createServer(app);
+const LOCAL_IP = getLocalExternalIP();
+server.listen(PORT, () => {
+  console.log(`Server running at: http://${LOCAL_IP}:${PORT}`);
+});
+// Serve index.html
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/index.html'));
 });
 
 const Game = require("./Game");
@@ -64,7 +80,7 @@ const addPlayer = (gameId, playerId, socket, isSpectator) => {
 
 // WebSocket server
 const { WebSocketServer } = require("ws");
-const ws = new WebSocketServer({ server });
+const ws = new WebSocketServer({ server});
 const { v4: uuidv4 } = require("uuid");
 
 function sendError(socket, message, protocol) {
