@@ -122,31 +122,18 @@ class Game {
   } else {
     // Hit opposing team
     let shooterPoints = 0;
-    let opponentDamage = 0;
     if (weapon === "shoot") {
       shooterPoints = 1;
-      opponentDamage = -1;
     } else if (weapon === "grenade") {
       shooterPoints = 10;
-      opponentDamage = -3;
     } else if (weapon === "bazooka") {
       shooterPoints = 3;
-      opponentDamage = -2;
     }
     shooter.updateScore(shooterPoints);
-    this.DeductOpponentPoints(opponentDamage, shooter.team === "blue" ? "red" : "blue");
+
   }
   this.recalculateTeamTotals();
   this.broadcastScoreUpdate(shooterId);
-  }
-
-  //Helper to apply damage to opposing team players
-  DeductOpponentPoints(damage, color){
-    for (const player of this.shooters.values()) {
-      if (player.team === color) { 
-        player.updateScore(damage);
-      }
-    }
   }
 
   recalculateTeamTotals() {
