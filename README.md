@@ -62,7 +62,7 @@ The application flows through several intuitive screens:
 
 - **A Mobile Device with a Camera:** The game is optimized for mobile browsers
 
-[Open the online deployment](https://csis3784_Assignment3.onrender.com)
+[Open the online deployment](https://csis3784-Assignment3.onrender.com)
 
 
 ## Getting started on running on a local machine 
