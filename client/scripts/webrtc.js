@@ -31,7 +31,11 @@ let onRemoteStreamCb = null;
 export async function initLocalStream({ video = true, audio = false } = {}) {
   if (localStream) return localStream;
   try {
-    localStream = await navigator.mediaDevices.getUserMedia({ video, audio });
+    //localStream = await navigator.mediaDevices.getUserMedia({ video, audio });
+    localStream = await navigator.mediaDevices.getUserMedia({ 
+      video: {facingMode: "environment" }, // prefer back camera on mobile 
+      audio
+    })
     // attach to #video if exists (player preview)
     const localVideo = document.getElementById("video");
     if (localVideo) {
