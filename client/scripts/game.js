@@ -615,7 +615,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.addEventListener('mouseup', mouseUpHandler, { once: true });
     } else {
         document.addEventListener('touchend', bazookaReleaseHandler, { once: true });
-        document.addEventListener('mouseup', bazookaReleaseHandler, { once: true }
+        document.addEventListener('mouseup', bazookaReleaseHandler, { once: true })
     }
     }
 
