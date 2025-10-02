@@ -62,7 +62,7 @@ The application flows through several intuitive screens:
 
 - **A Mobile Device with a Camera:** The game is optimized for mobile browsers
 
-[Open the online deployment](https://team-9-bbd-2025-mobile-laser-tag.onrender.com)
+[Open the online deployment](https://csis3784-Assignment3.onrender.com)
 
 
 ## Getting started on running on a local machine 
@@ -78,7 +78,7 @@ Follow these instructions to get the project running on your local network.
 
 ```bash
 git clone <your-repository-url>
-cd team-9-bbd-2025-mobile-laser-tag
+cd CSIS3784_Assignment3
 ```
 
 ### 2. Install Dependencies
