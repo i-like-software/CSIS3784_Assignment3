@@ -474,6 +474,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 shootButton.addEventListener('click', shootHandler);
                 bazookaButton.removeEventListener('touchstart', bazookaHandler);
                 bazookaButton.addEventListener('touchstart', bazookaHandler);
+                bazookaButton.removeEventListener('mousedown', bazookaHandler);
+                bazookaButton.addEventListener('mousedown', bazookaHandler);
                 grenadeButton.removeEventListener('click', grenadeHandler);
                 grenadeButton.addEventListener('click', grenadeHandler);
             }
@@ -605,12 +607,15 @@ document.addEventListener('DOMContentLoaded', () => {
             bazookaCircle.classList.add('hidden');
             bazookaCircle.style.strokeDashoffset = 0;
             document.removeEventListener('touchend', mouseUpHandler);
+            document.removeEventListener('mouseup', mouseUpHandler);
             bazookaReleaseHandler();
         }
 
         document.addEventListener('touchend', mouseUpHandler, { once: true });
+        document.addEventListener('mouseup', mouseUpHandler, { once: true });
     } else {
         document.addEventListener('touchend', bazookaReleaseHandler, { once: true });
+        document.addEventListener('mouseup', bazookaReleaseHandler, { once: true }
     }
     }
 
