@@ -157,3 +157,12 @@ video {
   70% { transform: scale(2); opacity: 0.7; }
   100% { transform: scale(3); opacity: 0; }
 }
+
+/*Make img non selectable*/
+img {
+    user-select: none; /* Standard */
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    pointer-events: none; /* Prevent interaction */
+}
