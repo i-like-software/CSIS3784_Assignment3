@@ -472,8 +472,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 // ensure multiple listeners are not stacked
                 shootButton.removeEventListener('click', shootHandler);
                 shootButton.addEventListener('click', shootHandler);
-                bazookaButton.removeEventListener('mousedown', bazookaHandler);
-                bazookaButton.addEventListener('mousedown', bazookaHandler);
+                bazookaButton.removeEventListener('click', bazookaHandler);
+                bazookaButton.addEventListener('click', bazookaHandler);
                 grenadeButton.removeEventListener('click', grenadeHandler);
                 grenadeButton.addEventListener('click', grenadeHandler);
             }
@@ -604,13 +604,13 @@ document.addEventListener('DOMContentLoaded', () => {
             stopped = true;
             bazookaCircle.classList.add('hidden');
             bazookaCircle.style.strokeDashoffset = 0;
-            document.removeEventListener('mouseup', mouseUpHandler);
+            document.removeEventListener('touchend', mouseUpHandler);
             bazookaReleaseHandler();
         }
 
-        document.addEventListener('mouseup', mouseUpHandler, { once: true });
+        document.addEventListener('touchend', mouseUpHandler, { once: true });
     } else {
-        document.addEventListener('mouseup', bazookaReleaseHandler, { once: true });
+        document.addEventListener('touchend', bazookaReleaseHandler, { once: true });
     }
     }
 
