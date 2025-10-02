@@ -472,8 +472,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 // ensure multiple listeners are not stacked
                 shootButton.removeEventListener('click', shootHandler);
                 shootButton.addEventListener('click', shootHandler);
-                bazookaButton.removeEventListener('click', bazookaHandler);
-                bazookaButton.addEventListener('click', bazookaHandler);
+                bazookaButton.removeEventListener('touchstart', bazookaHandler);
+                bazookaButton.addEventListener('touchstart', bazookaHandler);
                 grenadeButton.removeEventListener('click', grenadeHandler);
                 grenadeButton.addEventListener('click', grenadeHandler);
             }
