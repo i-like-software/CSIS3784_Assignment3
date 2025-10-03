@@ -1,6 +1,7 @@
 /* styles/style.css - General/Shared Styles */
 html {
-  scroll-behavior: smooth;
+    overflow: auto;
+    scroll-behavior: smooth;
 }
 
 body {
