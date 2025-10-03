@@ -22,27 +22,6 @@ const getLocalExternalIP = () => {
 
 const PORT = process.env.PORT || 3000;
 
-
-// --- Old server code (commented out for reference) ---
-/*
-let server;
-if (PORT == 3000) {
-  const options = {
-    key: fs.readFileSync(path.join(__dirname, "../cert", "server.key")),
-    cert: fs.readFileSync(path.join(__dirname, "../cert", "server.cert")),
-  };
-  server = https.createServer(options, app);
-} else {
-  console.log("Running in production mode, using HTTP");
-  server = http.createServer(app);
-}
-
-const LOCAL_IP = getLocalExternalIP();
-server.listen(PORT, () => {
-  console.log(`Server running at: https://${LOCAL_IP}:${PORT}`);
-});
-*/
-
 // --- New production-ready server code ---
 const server = http.createServer(app);
 const LOCAL_IP = getLocalExternalIP();
@@ -269,37 +248,6 @@ ws.on("connection", (socket) => {
           
           console.log(`${username} shot at ${color} in game ${gameId} with ${weapon}`);
           game.playerHitEventHandler(socket.id, color, weapon);
-
-          //Don't know why the following code was included, commenting out for now
-          /*/ Only award score if hit is on the *opposite* team
-          const player = game.getPlayer(socket.id);
-          if (player) {
-            if (
-              (player.team === "red" && color === "blue") ||
-              (player.team === "blue" && color === "red")
-            ) {
-              player.score = (player.score || 0) + 1;
-            }
-          }
-
-          // Updated player list
-          const updatedPlayerList = game.getPlayerList();
-
-          // Compute team totals
-          const redTeamScore = updatedPlayerList
-            .filter(p => p.team === "red")
-            .reduce((sum, p) => sum + (p.score || 0), 0);
-          const blueTeamScore = updatedPlayerList
-            .filter(p => p.team === "blue")
-            .reduce((sum, p) => sum + (p.score || 0), 0);
-
-          // Broadcast updated scores
-          game.broadcastAll({
-            type: "score_update",
-            players: updatedPlayerList,
-            redTeamScore,
-            blueTeamScore
-          });*/
         }
         break;
 
